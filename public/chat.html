@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      .recipient{
+        background-color:#000;
+        background:gray;
+        border-bottom-style:solid;
+        border-width:1px;
+        border-color:black;
+        padding:15px 32px;
+        text-align:center;
+      }
+    </style>
+    <title>Send App</title>
+  </head>
+  <body>
+    <p>Alpha v0.1 Chat Page</p>
+    <input id='signOut' type='button' value='Sign Out'>
+    <br><br>
+    <div id='recipBox' style='display:inline-block;width:200px;background:black;height:400;'>
+      <div id='recipScroller' style='overflow-y:auto;height:400px;'>
+
+      </div>
+    </div>
+    <div id='messageBox' style='display:inline-block;width:580px;height:400px;background:gray;'>
+      <div id='messageScroller' style='overflow-y:auto; width:580px; height:375px;background:gray;'>
+
+      </div>
+        <input id='msgContent' type='text' style='width:510px;display:inline-block;' placeholder='Message'>
+        <input id='msgSend' type = 'submit' style='display:inline-block;' value='Send'>
+    </div>
+    <div id='testSection'>
+
+    </div>
+
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+      authDomain: "chat-app-de2ed.firebaseapp.com",
+      databaseURL: "https://chat-app-de2ed.firebaseio.com",
+      projectId: "chat-app-de2ed",
+      storageBucket: "chat-app-de2ed.appspot.com",
+      messagingSenderId: "51951204589"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <!-- <script src="js/chat.js"></script>
+  <script>
+    const database=firebase.database();
+    var pulledMessages=0;
+    function getMessages(threadId) {
+
+      database.ref('threads/' + threadId + '/messages').orderByKey().limitToLast(30).on("child_added", function(snapshot) {
+        //find sender from, as of now it's the uid
+        //var newChatElement=createChatElement(snapshot.val().content, convertTimestamp(snapshot.val().timestamp), snapshot.val().sender);
+        //append newChatElement
+        console.log(snapshot.val().content);
+        pulledMessages++;
+        console.log(pulledMessages);
+      });
+
+    }
+
+    function getMoreMessages(threadId) {
+      database.ref('threads/' + threadId + '/messages').orderByKey().startAt(50-20).endAt(50-30).on('child_added', function(snapshot) {
+        console.log(snapshot.val().content);
+        pulledMessages++;
+        console.log(pulledMessages);
+      });
+    }
+    getMessages('PUSHID');
+    alert('got first 30');
+    getMoreMessages('PUSHID');
+  </script>
+  <script>
+    const database=firebase.database();
+    var earliestMessageDownloadedKey='';
+    const newDiv=document.getElementById('testSection');
+    const currentThread='PUSHID';
+
+    function getMessages() {
+      var setEarliestKey=false;
+      var displayKeychat=false;
+      database.ref('threads/' + currentThread + '/messages').orderByKey().limitToLast(11).on("child_added", function(snapshot) {
+        //find sender from, as of now it's the uid
+        if (snapshot.val() === null) {
+          displayKeychat=true;
+        } else if (setEarliestKey === false && displayKeychat === false) {
+          earliestMessageDownloadedKey=snapshot.key;
+          setEarliestKey=true;
+        } else {
+          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
+          newDiv.appendChild(newChatElement);
+        }
+      });
+    }
+    // get earlier messages (triggered on scrolling to top of msg box)
+    function getMoreMessages() {
+      var setEarliestKey=false;
+      var lastElementPosted=null;
+      var displayKeychat=false;
+      var endKey=earliestMessageDownloadedKey;
+      // changing to get object with target chats then go through them
+      var currListener = firebase.database().ref('threads/' + currentThread + '/messages').orderByKey().endAt(earliestMessageDownloadedKey).limitToLast(21).on('child_added', function(snapshot) {
+        if (snapshot.val() === null) {
+          displayKeychat=true;
+        } else if (setEarliestKey === false && displayKeychat === false) {
+          earliestMessageDownloadedKey=snapshot.key;
+          setEarliestKey=true;
+        } else {
+          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
+          if (lastElementPosted === null) {
+            newDiv.insertBefore(newChatElement, newDiv.firstChild);
+          } else if (snapshot.val() !== null) {
+            lastElementPosted.after(newChatElement);
+          }
+          lastElementPosted=newChatElement;
+        }
+        // close callback when reached end of query
+        if (snapshot.key===endKey) {
+          firebase.database().ref('threads/' + currentThread + '/messages').off('child_added', currListener);
+        }
+      });
+      /*
+      firebase.database().ref('threads/' + currentThread + '/messages').orderByKey().endAt(earliestMessageDownloadedKey).limitToLast(12).on('child_added', function(snapshot) {
+        if (snapshot.val() === null) {
+          displayKeychat=true;
+        } else if (setEarliestKey === false && displayKeychat === false) {
+          earliestMessageDownloadedKey=snapshot.key;
+          setEarliestKey=true;
+        } else {
+          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
+          if (lastElementPosted === null) {
+            newDiv.insertBefore(newChatElement, newDiv.firstChild);
+          } else if (snapshot.val() !== null) {
+            lastElementPosted.after(newChatElement);
+          }
+          lastElementPosted=newChatElement;
+        }
+      });
+      */
+    }
+    function createChatElement(content, timestamp, sender) {
+      var newp=document.createElement("p");
+      var newpText=document.createTextNode('[' + sender + ']: ' + content);
+      newp.appendChild(newpText);
+      return newp;
+    }
+    document.getElementById('signOut').addEventListener('click', e =>{
+      getMoreMessages();
+    });
+    getMessages();
+  </script>
+  <script>
+  window.userUid='bhaV13jydSSCrPnnLBQuQZI1XRh1';
+  var database=firebase.database();
+
+
+  // var assigned to callback tracking new messages
+  var currMessageCallback=null;
+
+  // var assigned to callback tracking user's threads
+  var currThreadsCallback=null;
+
+  // var to keep track of last message downloaded
+  var earliestMessageDownloadedKey='';
+
+  // threadList is global list of threads in arbitrary order
+  var threadList=[];
+
+  // currentThread is global string with threadID of visible thread messages
+  var currentThread='';
+
+  function createThreadElement(previewTimestamp, previewContent, previewSender, previewNameMembers) {
+    // do whatever html and js you need here
+  }
+
+  function clearThreadlist() {
+    // when set html element, set innerhtml to ''
+  }
+
+
+  function updateThreads(snapshot) {
+    // for each current thread, turn off listener to check for changes
+    if (threadList) {
+      for (var thread in threadList) {
+        database.ref('threads/' + thread).off('child_changed', updateThreads); // remove listeners for
+      }
+    }
+    clearThreadlist();
+    currMessageCallback = database.ref('users/' + window.userUid + '/threads').on('child_added', function (snapshot) {
+      // snapshot = users/UID/threads/threadID
+      database.ref('threads/' + snapshot.key + '/messages').orderByKey().limitToLast(1).once('value', function(messSnap) {
+        // messSnap = threads/threadID/messages
+        if (messSnap.ref().parent().child('info/name') !== '') {
+          database.ref('threads/'+ snapshot.key + '/info/members').once('value', function(membersSnap) {
+            createThreadElement(messSnap.timestamp, messSnap.content, getUsername(messSnap.sender),   );
+          });
+        }
+        createThreadElement(snapshot.timestamp, snapshot.content, )
+      });
+    });
+
+
+    // for each current thread, set up listener for changes
+    for (var thread in threadList) {
+      // NOT SURE IF THIS WILL WORK BC OF LAST FUNCTION should work
+      database.ref('threads/' + thread).on("child_changed", updateThreads);
+    }
+  }
+
+  document.getElementById('signOut').addEventListener('click', e =>{
+    updateThreads(0);
+  });
+
+
+    var testvar='asdf';
+    firebase.database().ref('usernames/testing').once('value', function (snapshot) {
+      testvar=snapshot.val();
+      console.log(snapshot.val());
+    });
+    console.log(testvar);
+  </script>-->
+  <script>
+    function stripLeadingZerosDate(dateStr){
+      return dateStr.split('/').reduce(function(date, datePart){
+          return date += parseInt(datePart) + '/'
+      }, '').slice(0, -1);
+    }
+    var yyyy=2018;
+    yyyy=yyyy.toString().substring(2);
+    var addition='02/01/'+yyyy;
+    console.log(stripLeadingZerosDate(addition));
+
+  </script>
+</html>

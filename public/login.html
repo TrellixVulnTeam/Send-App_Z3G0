@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <title>Send App</title>
+
+  </head>
+
+  <body>
+      <p>Alpha v0.1 Login Page</p>
+      <input id="txtUsername" type="text" placeholder="Username"><br>
+      <input id="txtPassword" type="password" placeholder="Password"><br>
+      <input id="btnLogin" type="button" value="Login">
+      <p style='font-size:x-small'>Don't have an account? Sign up <a href='sign_up.html'>here</a>.</p>
+  </body>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+      authDomain: "chat-app-de2ed.firebaseapp.com",
+      databaseURL: "https://chat-app-de2ed.firebaseio.com",
+      projectId: "chat-app-de2ed",
+      storageBucket: "chat-app-de2ed.appspot.com",
+      messagingSenderId: "51951204589"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <!-- logic script -->
+  <script src="js/login.js"></script>
+  <!-- Testing for database stuff
+  <script>
+    firebase.database().ref('threads').orderByChild('info/members').hasChild('jeremy').on("child_added", function(snapshot) {
+      console.log(snapshot);
+      console.log(snapshot.val());
+    });
+  </script>
+  -->
+
+</html>

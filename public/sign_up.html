@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Send App</title>
+
+  </head>
+  <body>
+    <p>Alpha v0.1 Sign Up Page</p>
+    <input id='txtUsername' type="text" placeholder="Username">
+    <div id='usernameCheck' style='display:none'>
+      <div id='usernameCheckCircle' style='background:green;width:10px;height:10px;border-radius:5px;display:inline-block;'></div>
+      <p id='usernameExistsText' style='color:red;font-size:small;display:none;'>Username Unavailable</p>
+      <p id='usernameInvalidString' style='color:red;font-size:small;display:none;'>Username Can Not Contain: ".", "#", "$", "[", or "]"</p>
+    </div>
+    <br>
+    <input id="txtPassword" type="password" name="pass" placeholder="Password"><br>
+    <input id="btnSignup" type="button" value="Sign Up">
+    <br>
+    <p style='font-size:x-small'>Already have an account? Sign in <a href='login.html'>here</a>.</p>
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+      authDomain: "chat-app-de2ed.firebaseapp.com",
+      databaseURL: "https://chat-app-de2ed.firebaseio.com",
+      projectId: "chat-app-de2ed",
+      storageBucket: "chat-app-de2ed.appspot.com",
+      messagingSenderId: "51951204589"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <script src="js/sign_up.js"></script>
+
+</html>
