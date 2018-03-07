@@ -10,7 +10,9 @@ var usernameValid=false;
 const database = firebase.database();
 const auth=firebase.auth();
 
+
 // check for valid username dynamically
+
 txtUsername.onkeyup = function checkUsername(){
   var username=txtUsername.value.toLowerCase();
   if (username.indexOf('.') > -1||username.indexOf('#') > -1||username.indexOf('$') > -1||username.indexOf('[') > -1||username.indexOf(']') > -1) {
@@ -36,27 +38,36 @@ txtUsername.onkeyup = function checkUsername(){
 };
 
 btnSignup.addEventListener('click', e=> {
-  if (usernameValid) {
-    var username = txtUsername.value.toString().toLowerCase();
-    var password = txtPassword.value;
-    auth.createUserWithEmailAndPassword(username + '@send-app.com',password);
+  console.log('Clicked Button');
+  if (usernameInvalidString) {
+    console.log('Valid Username');
+    auth.createUserWithEmailAndPassword(txtUsername.value+"@send-app.com", txtPassword.value).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert("Error "+errorCode+": "+errorMessage);
+    });
   }
+});
+
+txtUsername.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    // if enter pressed
+    if (event.keyCode === 13) {
+        btnSignup.click();
+    }
+});
+
+txtPassword.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    // if enter pressed
+    if (event.keyCode === 13) {
+        btnSignup.click();
+    }
 });
 
 firebase.auth().onAuthStateChanged(firebaseUser=>{
   if(firebaseUser){
-    if (usernameValid) {
-      var username=txtUsername.value.toString().toLowerCase();
-      // add username to usernames
-      database.ref('usernames').update({
-        [username]: firebaseUser.uid,
-      });
-      // add username to uid
-      database.ref('users/' + firebaseUser.uid).set({
-        username: username,
-      });
-    }
-    window.location.href = 'chat.html';
+    window.location.href = 'new_chat.html';
   }else{
     console.log("Not Logged In");
   }

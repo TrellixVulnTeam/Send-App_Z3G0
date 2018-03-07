@@ -1,137 +1,55 @@
-<div class="menu">
-            <a href="#" class="back"><i class="fa fa-angle-left"></i> <img src="https://i.imgur.com/G4EjwqQ.jpg" draggable="false"/></a>
-            <div class="name">Random chat</div>
-	<div class="members"><b>You</b>, Marga, Charo & Brotons</div>
-        </div>
-    <ol class="chat">
-    <li class="other">
-      <div class="msg">
-          <div class="user">Marga<span class="range admin">Admin</span></div>
-        <p>Dude</p>
-        <p>Want to go dinner? <emoji class="pizza"></emoji></p>
-        <time>20:17</time>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      .recipient{
+        background-color:#000;
+        background:gray;
+        border-bottom-style:solid;
+        border-width:1px;
+        border-color:black;
+        padding:15px 32px;
+        text-align:center;
+      }
+    </style>
+    <title>Send App</title>
+  </head>
+  <body>
+    <p>Alpha v0.1 Chat Page</p>
+    <input id='signOut' type='button' value='Sign Out'>
+    <br>
+    <input id='toUsername' type="text" placeholder="Username to send to">
+    <input id='submitNewThread' type="button" value="Submit">
+    <br><br>
+    <div id='recipBox' style='display:inline-block;width:200px;background:black;height:400;'>
+      <div id='recipScroller' style='overflow-y:auto;height:400px;'>
+
       </div>
-    </li>
-    <li class="self">
-      <div class="msg">
-        <p>Puff...</p>
-        <p>I'm still doing the Góngora comment... <emoji class="books"></emoji></p>
-        <p>Better other day</p>
-        <time>20:18</time>
+    </div>
+    <div id='messageBox' style='display:inline-block;width:580px;height:400px;background:gray;'>
+      <div id='messageScroller' style='overflow-y:auto; width:580px; height:375px;background:gray;'>
       </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Brotons</div>
-        <p>What comment about Góngora? <emoji class="suffocated"></emoji></p>
-        <time>20:18</time>
-      </div>
-    </li>
-    <li class="self">
-      <div class="msg">
-        <p>The comment sent Marialu</p>
-        <p>It's for tomorrow</p>
-        <time>20:18</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Brotons</div>
-        <p><emoji class="scream"></emoji></p>
-        <p>Hand it to me! <emoji class="please"></emoji></p>
-        <time>20:18</time>
-      </div>
-    </li>
-    <li class="self">
-      <div class="msg">
-        <img src="https://i.imgur.com/kUPxcsI.jpg" draggable="false"/>
-        <time>20:19</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Brotons</div>
-        <p>Thank you! <emoji class="hearth_blue"></emoji></p>
-        <time>20:20</time>
-      </div>
-    </li>
-        <div class="day">Today</div>
-    <li class="self">
-      <div class="msg">
-        <p>Who wants to play Minecraft?</p>
-        <time>18:03</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Charo</div>
-        <p>Come on, I didn't play it for four months</p>
-        <time>18:07</time>
-      </div>
-    </li>
-    <li class="self">
-      <div class="msg">
-        <p>Ehh, the launcher crash... <emoji class="cryalot"></emoji></p>
-        <time>18:08</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Charo</div>
-        <p><emoji class="lmao"></emoji></p>
-        <p>Sure that is the base code</p>
-        <p>I told it to Mojang</p>
-        <time>18:08</time>
-      </div>
-    </li>
-    <li class="self">
-      <div class="msg">
-        <p>It's a joke</p>
-        <p>Moai attack!</p>
-        <p><emoji class="moai"></emoji><emoji class="moai"></emoji><emoji class="moai"></emoji><emoji class="moai"></emoji><emoji class="moai"></emoji><emoji class="moai"></emoji></p>
-        <time>18:10</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Charo</div>
-        <p>XD</p>
-        <p><emoji class="funny"></emoji></p>
-        <p>Heart for this awesome design!</p>
-        <time>18:08</time>
-      </div>
-    </li>
-        <p class="notification">David joined the group <time>18:09</time></p>
-    <li class="self">
-      <div class="msg">
-        <p>Heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeellooooooooooooooooooooooooooooooo David <emoji class="smile"/></p>
-        <time>18:09</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">David</div>
-          <p>What is that <emoji class="shit"></emoji> ?</p>
-        <time>18:10</time>
-      </div>
-    </li>
-        <p class="notification">David left the group <time>18:11</time></p>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Brotons</div>
-        <p>Lol?</p>
-        <time>18:12</time>
-      </div>
-    </li>
-    <li class="other">
-      <div class="msg">
-          <div class="user">Marga<span class="range admin">Admin</span></div>
-        <p>I'm boring...</p>
-        <p>Who wants to do some logarithms? <emoji class="smile"></emoji></p>
-        <time>18:15</time>
-      </div>
-    </li>
-    </ol>
-<div class="typezone">
-<form><textarea type="text" placeholder="Say something"></textarea><input type="submit" class="send" value=""/></form>
-<div class="emojis"></div></div>
+        <input id='msgContent' type='text' style='width:510px;display:inline-block;' placeholder='Message'>
+        <input id='msgSend' type = 'submit' style='display:inline-block;' value='Send'>
+    </div>
+    <div id='testSection'>
+
+    </div>
+
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+      authDomain: "chat-app-de2ed.firebaseapp.com",
+      databaseURL: "https://chat-app-de2ed.firebaseio.com",
+      projectId: "chat-app-de2ed",
+      storageBucket: "chat-app-de2ed.appspot.com",
+      messagingSenderId: "51951204589"
+    };
+    firebase.initializeApp(config);
+  </script>
+<script src='js/new_chat.js'></script>
+</html>

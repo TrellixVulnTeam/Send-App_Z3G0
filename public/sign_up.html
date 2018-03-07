@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Send App</title>
-
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="js/jsencrypt.min.js"></script>
   </head>
   <body>
     <p>Alpha v0.1 Sign Up Page</p>
@@ -11,7 +12,7 @@
     <div id='usernameCheck' style='display:none'>
       <div id='usernameCheckCircle' style='background:green;width:10px;height:10px;border-radius:5px;display:inline-block;'></div>
       <p id='usernameExistsText' style='color:red;font-size:small;display:none;'>Username Unavailable</p>
-      <p id='usernameInvalidString' style='color:red;font-size:small;display:none;'>Username Can Not Contain: ".", "#", "$", "[", or "]"</p>
+      <p id='usernameInvalidString' style='color:red;font-size:small;display:none;'>Username Can Not Contain: ' ', '.', '#', '$', '[', or ']'</p>
     </div>
     <br>
     <input id="txtPassword" type="password" name="pass" placeholder="Password"><br>
