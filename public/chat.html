@@ -1,241 +1,240 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <style>
-      .recipient{
-        background-color:#000;
-        background:gray;
-        border-bottom-style:solid;
-        border-width:1px;
-        border-color:black;
-        padding:15px 32px;
-        text-align:center;
-      }
-    </style>
-    <title>Send App</title>
-  </head>
-  <body>
-    <p>Alpha v0.1 Chat Page</p>
-    <input id='signOut' type='button' value='Sign Out'>
-    <br><br>
-    <div id='recipBox' style='display:inline-block;width:200px;background:black;height:400;'>
-      <div id='recipScroller' style='overflow-y:auto;height:400px;'>
+<html lang="en">
 
-      </div>
-    </div>
-    <div id='messageBox' style='display:inline-block;width:580px;height:400px;background:gray;'>
-      <div id='messageScroller' style='overflow-y:auto; width:580px; height:375px;background:gray;'>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Send</title>
 
-      </div>
-        <input id='msgContent' type='text' style='width:510px;display:inline-block;' placeholder='Message'>
-        <input id='msgSend' type = 'submit' style='display:inline-block;' value='Send'>
-    </div>
-    <div id='testSection'>
+	<!-- Google Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
 
-    </div>
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Custom Stylesheet -->
+	<link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script>
+			<link rel = "stylesheet"
+				href = "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+<script>
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+		authDomain: "chat-app-de2ed.firebaseapp.com",
+		databaseURL: "https://chat-app-de2ed.firebaseio.com",
+		projectId: "chat-app-de2ed",
+		storageBucket: "chat-app-de2ed.appspot.com",
+		messagingSenderId: "51951204589"
+	};
+	firebase.initializeApp(config);
+</script>
+<style>
 
-  </body>
-  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
-      authDomain: "chat-app-de2ed.firebaseapp.com",
-      databaseURL: "https://chat-app-de2ed.firebaseio.com",
-      projectId: "chat-app-de2ed",
-      storageBucket: "chat-app-de2ed.appspot.com",
-      messagingSenderId: "51951204589"
-    };
-    firebase.initializeApp(config);
-  </script>
-  <!-- <script src="js/chat.js"></script>
-  <script>
-    const database=firebase.database();
-    var pulledMessages=0;
-    function getMessages(threadId) {
+.dropdown-content {
+  background-color: teal;
+  margin: 0;
+  display: none;
+  min-width: auto; /* Changed this to accomodate content width */
+  max-height: 500px;
+	margin-left: -1px; /* Add this to keep dropdown in line with edge of navbar */
+  overflow: hidden; /* Changed this from overflow-y:auto; to overflow:hidden; */
+  opacity: 0;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 1;
+  will-change: width, height;
+}
 
-      database.ref('threads/' + threadId + '/messages').orderByKey().limitToLast(30).on("child_added", function(snapshot) {
-        //find sender from, as of now it's the uid
-        //var newChatElement=createChatElement(snapshot.val().content, convertTimestamp(snapshot.val().timestamp), snapshot.val().sender);
-        //append newChatElement
-        console.log(snapshot.val().content);
-        pulledMessages++;
-        console.log(pulledMessages);
-      });
+.nav{
+    color: #fff;
+    background-color: #00bcd4;
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+}
+.right{
+	clear: right;
+	float:right;
+	color: red lighten-2;
+}
+.user{
+	clear: right;
+	color = red lighten-2;
+}
+.theirmessage{
+	clear: right;
+	color = black;
+	float:left;
+}
+.mymessage{
+	clear: right;
+	color = black;
+  float:right;
+}
+.input{
+	max-width: :500px;
+}
+</style>
 
-    }
+<body style = "overflow:hidden;">
+	<header class="top-nav" id = "navbar">
+            <div class = "navbar-fixed" >
+							<nav class = "navbar-color" >
+               <div class = "nav-wrapper" >
+								 	<font size="7" color = "teal">Send </font>
 
-    function getMoreMessages(threadId) {
-      database.ref('threads/' + threadId + '/messages').orderByKey().startAt(50-20).endAt(50-30).on('child_added', function(snapshot) {
-        console.log(snapshot.val().content);
-        pulledMessages++;
-        console.log(pulledMessages);
-      });
-    }
-    getMessages('PUSHID');
-    alert('got first 30');
-    getMoreMessages('PUSHID');
-  </script>
-  <script>
-    const database=firebase.database();
-    var earliestMessageDownloadedKey='';
-    const newDiv=document.getElementById('testSection');
-    const currentThread='PUSHID';
+									<ul id = "nav-mobile" class = "right hide-on-med-and-down">
 
-    function getMessages() {
-      var setEarliestKey=false;
-      var displayKeychat=false;
-      database.ref('threads/' + currentThread + '/messages').orderByKey().limitToLast(11).on("child_added", function(snapshot) {
-        //find sender from, as of now it's the uid
-        if (snapshot.val() === null) {
-          displayKeychat=true;
-        } else if (setEarliestKey === false && displayKeychat === false) {
-          earliestMessageDownloadedKey=snapshot.key;
-          setEarliestKey=true;
-        } else {
-          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
-          newDiv.appendChild(newChatElement);
-        }
-      });
-    }
-    // get earlier messages (triggered on scrolling to top of msg box)
-    function getMoreMessages() {
-      var setEarliestKey=false;
-      var lastElementPosted=null;
-      var displayKeychat=false;
-      var endKey=earliestMessageDownloadedKey;
-      // changing to get object with target chats then go through them
-      var currListener = firebase.database().ref('threads/' + currentThread + '/messages').orderByKey().endAt(earliestMessageDownloadedKey).limitToLast(21).on('child_added', function(snapshot) {
-        if (snapshot.val() === null) {
-          displayKeychat=true;
-        } else if (setEarliestKey === false && displayKeychat === false) {
-          earliestMessageDownloadedKey=snapshot.key;
-          setEarliestKey=true;
-        } else {
-          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
-          if (lastElementPosted === null) {
-            newDiv.insertBefore(newChatElement, newDiv.firstChild);
-          } else if (snapshot.val() !== null) {
-            lastElementPosted.after(newChatElement);
-          }
-          lastElementPosted=newChatElement;
-        }
-        // close callback when reached end of query
-        if (snapshot.key===endKey) {
-          firebase.database().ref('threads/' + currentThread + '/messages').off('child_added', currListener);
-        }
-      });
-      /*
-      firebase.database().ref('threads/' + currentThread + '/messages').orderByKey().endAt(earliestMessageDownloadedKey).limitToLast(12).on('child_added', function(snapshot) {
-        if (snapshot.val() === null) {
-          displayKeychat=true;
-        } else if (setEarliestKey === false && displayKeychat === false) {
-          earliestMessageDownloadedKey=snapshot.key;
-          setEarliestKey=true;
-        } else {
-          var newChatElement=createChatElement(snapshot.val().content, snapshot.val().timestamp, snapshot.val().sender);
-          if (lastElementPosted === null) {
-            newDiv.insertBefore(newChatElement, newDiv.firstChild);
-          } else if (snapshot.val() !== null) {
-            lastElementPosted.after(newChatElement);
-          }
-          lastElementPosted=newChatElement;
-        }
-      });
-      */
-    }
-    function createChatElement(content, timestamp, sender) {
-      var newp=document.createElement("p");
-      var newpText=document.createTextNode('[' + sender + ']: ' + content);
-      newp.appendChild(newpText);
-      return newp;
-    }
-    document.getElementById('signOut').addEventListener('click', e =>{
-      getMoreMessages();
-    });
-    getMessages();
-  </script>
-  <script>
-  window.userUid='bhaV13jydSSCrPnnLBQuQZI1XRh1';
-  var database=firebase.database();
+										 <a id='btnSignOut' class = "btn tooltipped" data-delay = "25"data-tooltip = "Or don't sign out, it's really up to you.">Sign Out</a>
+                  </ul>
+               </div>
+						 </nav>
+					 </div>
+				 </header>
+						<div class = "row" >
+							<div class = "col m5 l4 whitesmoke" >
+                <div id='newRecipient' class = "card-panel whitesmoke" style = "overflow: overflow;">
+                      <div class="card-content" style = "margin: 5px;">
 
+                        <div class = "input-field center">
+                          <input style='inline-block' placeholder = "Create New Thread" id = "newThreadUsername" type = "text" />
+                          <div id='usernameCheckCircle' style='background:green;width:10px;height:10px;border-radius:5px;display:none;'></div>
+                        </div>
+                    </div>
+                  </div>
+									<div id= 'recipScroller' class = "card-panel red lighten-2" style = "height: 86.5vh; overflow: auto;">
 
-  // var assigned to callback tracking new messages
-  var currMessageCallback=null;
+										<div class = "card-panel red lighten-4" >
+											<font size="3" color = "Teal">The President <a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p >       Person you are currently chatting with is darker color. </p>
+											<div class = "right">right now</div>
+										</div>
+										<div class = "card-panel whitesmoke">
+											<font size="3" color = "Teal">Luigi<a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p >       The last chat you had goes here. </p>
+											<div class = "right"> 34 minutes ago</div>
+										</div>
+										<div class = "card-panel whitesmoke">
+											<font size="3" color = "Teal">Jesus<a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p>       The last chat you had goes here. </p>
+										<div class = "right"> 12:04</div>
+										</div>
+										<div class = "card-panel whitesmoke">
+											<font size="3" color = "Teal">Ryan Finley<a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p >       The last chat you had goes here. </p>
+										<div class = "right"> yesterday</div>
+										</div>
+										<div class = "card-panel whitesmoke">
+											<font size="3" color = "Teal">Random Friend<a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p >       This tests that this thing becomes scollable. </p>
+										<div class = "right"> yesterday</div>
+										</div>
+										<div class = "card-panel whitesmoke">
+											<font size="3" color = "Teal">Random Friend<a class="waves-effect transparent waves-light btn large z-depth-0" style = "border: 0px;"><i class="material-icons left " style = "color: teal;">create</i></a></font>
+											<p >       This tests that this thing becomes scollable. </p>
+										<div class = "right"> yesterday</div>
+										</div>
+							</div>
+						</div>
+							<div class = "col m7 l8 whitesmoke">
+								<div id='chatContainer' class = "card-panel red lighten-2" style = "height: 65vh; overflow: auto;">
+									<div class="card">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> Yo whats cookin good lookin?</div>
+											<div class = "right"> 12:04</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> Yo whats cookin good lookin?</div>
+											<div class = "right"> 12:04</div>
+										</div>
+									</div>
+									<div class="card lighten-2">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> Yo whats cookin good lookin?</div>
+											<div class = "right"> 12:04</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> Yo whats cookin good lookin?</div>
+											<div class = "right"> 12:04</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> Yo whats cookin good lookin?</div>
+											<div class = "right"> 12:04</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-content">
+											<div class = "right"> <font size="3" color = "Teal">Their Username</font></div>
+											<p> </p>
+											<div class = "theirmessage" > That's called sexually Harassment.</div>
+											<div class = "user"> 12:07</div>
+										</div>
+									</div>
+									<div class = "card">
+										<div class="card-content">
+											<div class = "user"> <font size="3" color = "Teal">My Username</font></div>
+											<div class = "mymessage"> I am sorry.</div>
+											<div class = "right"> 12:09</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-content">
+											<div class = "right"> <font size="3" color = "Teal">Their Username</font></div>
+											<p> </p>
+											<div class = "theirmessage" > I forgive you.</div>
+											<div class = "user"> 12:13</div>
+										</div>
+									</div>
+								</div>
+							<div class = "card-panel red lighten-2" style = "height: 20vh; overflow: overflow;">
+									<div class = "card" style = "position: fixed positon:absolute; bottom: 0 ;">
+										<div class="card-content" style = "margin: 5px;">
+											<div class = "input-field center">
+                  			<input placeholder = "Say Something" id = "message"type = "text" />
+               				</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-  // var assigned to callback tracking user's threads
-  var currThreadsCallback=null;
+<script>
+	$(document).ready(function () {
+    	$('#logo').addClass('animated fadeInDown');
+    	$("input:text:visible:first").focus();
+	});
+	$('#username').focus(function() {
+		$('label[for="username"]').addClass('selected');
+	});
+	$('#username').blur(function() {
+		$('label[for="username"]').removeClass('selected');
+	});
+	$('#password').focus(function() {
+		$('label[for="password"]').addClass('selected');
+	});
+	$('#password').blur(function() {
+		$('label[for="password"]').removeClass('selected');
+	});
+</script>
+<!-- logic script -->
+<script src="js/chat.js"></script>
 
-  // var to keep track of last message downloaded
-  var earliestMessageDownloadedKey='';
-
-  // threadList is global list of threads in arbitrary order
-  var threadList=[];
-
-  // currentThread is global string with threadID of visible thread messages
-  var currentThread='';
-
-  function createThreadElement(previewTimestamp, previewContent, previewSender, previewNameMembers) {
-    // do whatever html and js you need here
-  }
-
-  function clearThreadlist() {
-    // when set html element, set innerhtml to ''
-  }
-
-
-  function updateThreads(snapshot) {
-    // for each current thread, turn off listener to check for changes
-    if (threadList) {
-      for (var thread in threadList) {
-        database.ref('threads/' + thread).off('child_changed', updateThreads); // remove listeners for
-      }
-    }
-    clearThreadlist();
-    currMessageCallback = database.ref('users/' + window.userUid + '/threads').on('child_added', function (snapshot) {
-      // snapshot = users/UID/threads/threadID
-      database.ref('threads/' + snapshot.key + '/messages').orderByKey().limitToLast(1).once('value', function(messSnap) {
-        // messSnap = threads/threadID/messages
-        if (messSnap.ref().parent().child('info/name') !== '') {
-          database.ref('threads/'+ snapshot.key + '/info/members').once('value', function(membersSnap) {
-            createThreadElement(messSnap.timestamp, messSnap.content, getUsername(messSnap.sender),   );
-          });
-        }
-        createThreadElement(snapshot.timestamp, snapshot.content, )
-      });
-    });
-
-
-    // for each current thread, set up listener for changes
-    for (var thread in threadList) {
-      // NOT SURE IF THIS WILL WORK BC OF LAST FUNCTION should work
-      database.ref('threads/' + thread).on("child_changed", updateThreads);
-    }
-  }
-
-  document.getElementById('signOut').addEventListener('click', e =>{
-    updateThreads(0);
-  });
-
-
-    var testvar='asdf';
-    firebase.database().ref('usernames/testing').once('value', function (snapshot) {
-      testvar=snapshot.val();
-      console.log(snapshot.val());
-    });
-    console.log(testvar);
-  </script>-->
-  <script>
-    function stripLeadingZerosDate(dateStr){
-      return dateStr.split('/').reduce(function(date, datePart){
-          return date += parseInt(datePart) + '/'
-      }, '').slice(0, -1);
-    }
-    var yyyy=2018;
-    yyyy=yyyy.toString().substring(2);
-    var addition='02/01/'+yyyy;
-    console.log(stripLeadingZerosDate(addition));
-
-  </script>
 </html>

@@ -72,6 +72,8 @@ exports.addThreadIdToUserProfile = functions.database.ref('/threads/{threadPushI
     } else {
       return admin.database().ref('/threads/'+event.params.threadPushId+'/info/members/'+event.params.username).remove();
     }
+  }).catch(error => {
+    this.errorMessage = 'Error - ' + error.message
   });
 });
 

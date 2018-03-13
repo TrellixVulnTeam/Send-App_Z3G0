@@ -242,7 +242,6 @@ function updateThreadList() {
     // generate thread listeners
     threadListeners=[];
     for (i=0; i<threadList.length; i++) {
-      console.log('Making Listeners');
       var listener = database.ref('threads/' + threadList[i] + '/messages').on('child_changed', function (snapshot) {
         for (j=0; j<threadListeners.length; j++) {
           database.ref('threads/' + threadListeners[j][0] + '/messages').off('child_changed', threadListeners[j][1]);
@@ -254,15 +253,13 @@ function updateThreadList() {
     var endThreadId=threadList[threadList.length-1];
     var threadDict={};
     var timestampKeys=[];
-    console.log("threadList: "+threadList);
     for (var i = 0; i < threadList.length; i++) {
       (function(i) {
         // here the value of i was passed into as the argument cntr
         // and will be captured in this function closure so each
         // iteration of the loop can have it's own value
         database.ref('threads/'+threadList[i]+'/info').once('value').then( function(infoSnap){
-          console.log('Creating for '+threadList[i]);
-          if (infoSnap.child('name').val()==='' || infoSnap.child('name').val()===null){  // if no thread name assigned
+          if (snapshot.child(threadList[i]).val()===true || snapshot.child(threadList[i]).val()===null || snapshot.child(threadList[i]).val()===''){  // if no thread name assigned
             //(content, time, senderUsername, threadID)
             var senderString='';
             for (var key in infoSnap.child('members').val()){
@@ -272,10 +269,10 @@ function updateThreadList() {
             }
             //mkThreadTest(null,null, null, senderString, threadList[i]);
           } else {  // if thread name assigned
-            senderString=infoSnap.child('name').val()
+            senderString=snapshot.child(threadList[i]).val();
             //mkThreadTest(null,null,null,infoSnap.child('name').val(),threadList[i]);
           }
-          console.log("Setting senderString for "+threadList[i]+' to '+senderString);
+
           // get last message sent metadata
           //CODE FOR GETTING LAST MESSAGE DATA TO USE FOR THREAD BUTTON WHEN WE GET FANCIER
           if (infoSnap.child('messageCount').val()!==null && infoSnap.child('messageCount').val()!==0){ // If there are messages, pull last one
@@ -286,7 +283,6 @@ function updateThreadList() {
               if (endThreadId === threadList[i]) { // if last thread, push them all
                 timestampKeys.sort(function(a, b){return a-b}); //sort timestampKeys to be descending (newest thread first)
                 clearThreadlist();
-                console.log(timestampKeys);
                 for (var j=0; j < timestampKeys.length; j++) {
                   (function(j) {
                     ////threadDict[timestampKeys[i]]  gives list: [THREADID, preview_content, sender]
@@ -294,29 +290,22 @@ function updateThreadList() {
                     ////createThreadElement(currThreadDictObject[1], timestampKeys[i], currThreadDictObject[2]);
 
                     if (currThreadDictObject[2]!==null){
-                      console.log("1 Making thread object from dict: "+currThreadDictObject);
                       firebase.database().ref('/users/'+currThreadDictObject[2].toString()+'/username').once('value').then( function (usernameSnapshot){
-
-                        console.log('XXXXX calling mkThreadTest with args: '+currThreadDictObject[3]+', ' +currThreadDictObject[1]+', ' +convertTimestamp(timestampKeys[j], true)+', ' +usernameSnapshot.val()+', ' +threadList[i]);
                         mkThreadTest(currThreadDictObject[3], currThreadDictObject[1], convertTimestamp(timestampKeys[j], true), usernameSnapshot.val(), currThreadDictObject[0]);
                       });
                     } else {
                       mkThreadTest(currThreadDictObject[3], null, null, null, currThreadDictObject[0]);
                     }
-                    console.log("made thread");
                   })(j);
                 }
               }
             });
           } else{ // No messages
-            console.log("No messages for "+threadList[i]);
-            threadDict[2147483648+i]=[threadList[i],null,null,senderString];
-            timestampKeys.push(2147483648+i);
+            threadDict[infoSnap.child('created').val()]=[threadList[i],null,null,senderString];
+            timestampKeys.push(infoSnap.child('created').val());
             if (endThreadId === threadList[i]) { // if last thread, push them all
               timestampKeys.sort(function(a, b){return a-b}); //sort timestampKeys to be descending (newest thread first)
-              console.log(timestampKeys);
               clearThreadlist();
-              console.log(timestampKeys);
               for (var j=0; j < timestampKeys.length; j++) {
                 (function(j) {
                   ////threadDict[timestampKeys[i]]  gives list: [THREADID, preview_content, sender]
@@ -324,16 +313,12 @@ function updateThreadList() {
                   ////createThreadElement(currThreadDictObject[1], timestampKeys[i], currThreadDictObject[2]);
 
                   if (currThreadDictObject[2]!==null){
-                    console.log("1 Making thread object from dict: "+currThreadDictObject);
                     firebase.database().ref('/users/'+currThreadDictObject[2].toString()+'/username').once('value').then( function (usernameSnapshot){
-
-                      console.log('XXXXX calling mkThreadTest with args: '+currThreadDictObject[3]+', ' +currThreadDictObject[1]+', ' +convertTimestamp(timestampKeys[j], true)+', ' +usernameSnapshot.val()+', ' +threadList[i]);
                       mkThreadTest(currThreadDictObject[3], currThreadDictObject[1], convertTimestamp(timestampKeys[j], true), usernameSnapshot.val(), currThreadDictObject[0]);
                     });
                   } else {
                     mkThreadTest(currThreadDictObject[3], null, null, null, currThreadDictObject[0]);
                   }
-                  console.log("made thread");
                 })(j);
               }
             }
@@ -343,77 +328,6 @@ function updateThreadList() {
     }
   });
 }
-
-      //database.ref('threads/'+threadList[i]+'/info').once('value').then(function(infoSnap){
-        /* //CODE FOR GETTING LAST MESSAGE DATA TO USE FOR THREAD BUTTON WHEN WE GET FANCIER
-        if (infoSnap.child('messageCount').val()!==null && infoSnap.child('messageCount').val()!==0){ // If there are messages, pull last one
-          database.ref('threads/' + threadList[i] + '/messages').limitToLast(1).once("child_added").then( function(lastMsgSnap) {
-            threadDict[lastMsgSnap.val().timestamp]=[threadList[i],lastMsgSnap.val().content,lastMsgSnap.val().sender];//TODO add memberslist/name to info pulled\
-            timestampKeys.push(lastMsgSnap.val().timestamp);
-            if (counter==threadList.length-1) {
-              timestampKeys.sort(function(a, b){return b-a}); //sort timestampKeys to be descending (newest thread first)
-              clearThreadlist();
-              for (i=0; i < timestampKeys.length; i++) {
-                ////threadDict[timestampKeys[i]]  gives list: [THREADID, preview_content, sender]
-                var currThreadDictObject=threadDict[timestampKeys[i]];
-                ////createThreadElement(currThreadDictObject[1], timestampKeys[i], currThreadDictObject[2]);
-                firebase.database().ref('/users/'+currThreadDictObject[2].toString()+'/username').once('value').then( function (usernameSnapshot){
-                  //(content, time, senderUsername, threadID)
-                  mkThreadTest(currThreadDictObject[1], convertTimestamp(timestampKeys[i], true), usernameSnapshot.val(), currThreadDictObject[0]);
-                });
-              }
-              threadListeners=[];
-              for (i=0; i<threadList.length; i++) {
-                var listener = database.ref('threads/' + threadList[i] + '/messages').on('child_changed', function (snapshot) {
-                  for (j=0; j<threadListeners.length; j++) {
-                    database.ref('threads/' + threadListeners[j][0] + '/messages').off('child_changed', threadListeners[j][1]);
-                  }
-                  updateThreadList();
-                });
-                threadListeners.push([threadList[i],listener]);
-              }
-            }
-            counter++;
-          });
-        } else{ // No messages
-
-        }
-        */
-        // NOTE was writing code for pulling memberslist from each thread
-        // Promises are hard: https://stackoverflow.com/questions/38362231/how-to-use-promise-in-foreach-loop-of-array-to-populate-an-object?rq=1
-        // another:   https://stackoverflow.com/questions/35879695/promise-all-with-firebase-datasnapshot-foreach
-
-
-/*
-function sendMessageToNewThread(content, recipList) {
-  var timestamp = Date.now();
-  var threadData = {
-    info: {
-      created: timestamp,
-      name: '',
-      owner: window.userUid,
-    },
-    messages: {},
-  };
-  // generate new thread push key
-  var newThreadKey=database.ref('threads').push().key;
-  // set thread metadata
-  database.ref('threads/' + newThreadKey).set(threadData);
-  // push first message to thread
-  database.ref('threads/' + newThreadKey + '/messages').push({
-    content: content,
-    timestamp: timestamp,
-    sender: window.userUid,
-  });
-  // for each recipient, add the thread to their threads key (must set up security so it can't be accessed by people who arent your friend and people who dont own the thread)
-  for(var i = 0; i < recipList.length; i++) {
-    var recipUid = recipList[i];
-    database.ref('users/' + recipUid + '/threads').update({
-      [newThreadKey]: true,
-    });
-  }
-}
-*/
 
 // Sends message with content to threadId
 function sendMessage(content){
@@ -425,37 +339,6 @@ function sendMessage(content){
     });
 }
 
-// outdated function to pull thread ids and put them into threadlist box. Kept to reference
-/*
-function getRecipients() {
-
-  const threadsRef=database.ref('users/'+ window.userUid + '/threads');
-  //gets all thread uids
-  threadsRef.on('child_added', function addToRecipList(snapshot){
-    var uidOfThread=snapshot.key;
-    database.ref('usernames').orderByValue().equalTo(uidOfThread).once("child_added", function(usernameSnapshot){
-      var username=usernameSnapshot.key;
-      var newDiv=document.createElement("div");
-      var recipTxt=document.createTextNode(username);
-      newDiv.className='recipient';
-      newDiv.id=username;
-      newDiv.appendChild(recipTxt);
-      recipScroller.appendChild(newDiv);
-      document.getElementById(username).onclick=function(){
-        if (window.matchUid !== uidOfThread) {
-          clearChat();
-          window.matchUid=uidOfThread;
-          generateChat();
-        }
-      };
-    });
-  });
-
-}
-*/
-
-//MODIFIED TO SHOW JUST TIME NOT DATE
-//TODO: add argument to change output format
 function convertTimestamp(timestamp, fulldate) {
   var d = new Date(timestamp),
 		yyyy = d.getFullYear(),
@@ -498,14 +381,14 @@ function convertTimestamp(timestamp, fulldate) {
 
 	return time;
 }
-
+/*
 function sendFriendRequest(useruid){
   console.log('Setting users/'+useruid+'/friendReq/'+window.userUsername+' to '+window.userUid);
   database.ref('users/'+useruid+'/friendReq').update({[window.userUsername]: window.userUid});
 }
 
 // create functionailty for content box enter to click send button
-/*
+
 MESSAGE_CONTENT_OBJECT.addEventListener("keyup", function(event) {
     event.preventDefault();
     // if enter pressed
@@ -514,6 +397,7 @@ MESSAGE_CONTENT_OBJECT.addEventListener("keyup", function(event) {
     }
 });
 */
+
 
 // create functionaily for sending
 btnSend.addEventListener('click', e=> {
@@ -529,6 +413,7 @@ btnSignOut.addEventListener('click', e=>{
   console.error('Sign Out Error', error);
   });
 });
+
 
 btnSubmitNewThread.addEventListener('click', e=>{
   var targetUsername=newThreadUsername.value;
@@ -574,7 +459,17 @@ messageScroller.addEventListener('scroll', function(){
   }
 });
 
-
+/*
+function addUsersByUsername(newThreadKey, usernameList, numAdded){
+  database.ref('/usernames/'+usernameList[numAdded]).once('value').then(function(usernameSnapshot){
+    var targetUid=usernameSnapshot.val();
+    database.ref('threads/'+newThreadKey+'/members').update({[usernameList[numAdded]]:targetUid});
+    numAdded++;
+    if (numAdded !== usernameList.length){
+      addUsersByUsername(newThreadKey, usernameList, numAdded);
+    }
+}
+*/
 
 firebase.auth().onAuthStateChanged(firebaseUser=>{
   if(firebaseUser){
@@ -583,6 +478,9 @@ firebase.auth().onAuthStateChanged(firebaseUser=>{
       database.ref('/users/'+window.userUid+'/username').once('value').then( function (usernameSnapshot){
         window.userUsername = usernameSnapshot.val();
         if (snapshot.val()!==null){
+          database.ref('users/'+window.userUid+'/threads').on('child_changed', function(snapshot){
+            updateThreadList();
+          });
           updateThreadList();
         } else {
           alert("Ya done messed up ya account");

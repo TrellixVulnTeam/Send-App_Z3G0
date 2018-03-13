@@ -67,7 +67,7 @@ txtPassword.addEventListener("keyup", function(event) {
 
 firebase.auth().onAuthStateChanged(firebaseUser=>{
   if(firebaseUser){
-    window.location.href = 'new_chat.html';
+    window.location.href = 'chat.html';
   }else{
     console.log("Not Logged In");
   }
