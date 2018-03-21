@@ -1,38 +1,79 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Send App</title>
-    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-    <script src="js/jsencrypt.min.js"></script>
-  </head>
-  <body>
-    <p>Alpha v0.1 Sign Up Page</p>
-    <input id='txtUsername' type="text" placeholder="Username">
-    <div id='usernameCheck' style='display:none'>
-      <div id='usernameCheckCircle' style='background:green;width:10px;height:10px;border-radius:5px;display:inline-block;'></div>
-      <p id='usernameExistsText' style='color:red;font-size:small;display:none;'>Username Unavailable</p>
-      <p id='usernameInvalidString' style='color:red;font-size:small;display:none;'>Username Can Not Contain: ' ', '.', '#', '$', '[', or ']'</p>
-    </div>
-    <br>
-    <input id="txtPassword" type="password" name="pass" placeholder="Password"><br>
-    <input id="btnSignup" type="button" value="Sign Up">
-    <br>
-    <p style='font-size:x-small'>Already have an account? Sign in <a href='login.html'>here</a>.</p>
-  </body>
-  <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
-      authDomain: "chat-app-de2ed.firebaseapp.com",
-      databaseURL: "https://chat-app-de2ed.firebaseio.com",
-      projectId: "chat-app-de2ed",
-      storageBucket: "chat-app-de2ed.appspot.com",
-      messagingSenderId: "51951204589"
-    };
-    firebase.initializeApp(config);
-  </script>
-  <script src="js/sign_up.js"></script>
+<html lang="en">
 
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Send Sign Up</title>
+
+	<!-- Google Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Custom Stylesheet -->
+	<link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script>
+			<link rel = "stylesheet"
+				href = "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+</head>
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+<script>
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyC-g7sKVH4bp1RNwQxpU3H44MnzYB8bNdo",
+		authDomain: "chat-app-de2ed.firebaseapp.com",
+		databaseURL: "https://chat-app-de2ed.firebaseio.com",
+		projectId: "chat-app-de2ed",
+		storageBucket: "chat-app-de2ed.appspot.com",
+		messagingSenderId: "51951204589"
+	};
+	firebase.initializeApp(config);
+</script>
+<body>
+  <div class = "row">
+    <div class = "col s12 m6 push-s0 push-m3">
+      <div class = "card-panel red lighten-2" style = " overflow: overflow;">
+        <div class="card-content valign center" style = "font-size: 70px; color: teal;">
+          Send
+        </div>
+        <div class = "card" style = "position: fixed positon:absolute; bottom: 0 ;">
+          <div class="card-content" style = "margin: 5px;">
+            <div class = "row">
+              <div class = "col s11">
+                <div class = "input-field center">
+                  <input placeholder = "Username" id = "txtUsername" type = "text" />
+
+                </div>
+                <div class = "input-field center">
+                  <input placeholder = "Password" id = "txtPassword" type = "password" />
+                </div>
+              </div>
+            <div class = "col s1">
+              <div id="usernameCheck" style="display: none;">
+                <div id="usernameCheckCircle" style="background:green;width:10px;height:10px;border-radius:5px;display:inline-block;"></div>
+                <p id="usernameExistsText" style="color:red;font-size:small;display:none;">Username Unavailable</p>
+                <p id="usernameInvalidString" style="color:red;font-size:small;display:none;">Username Can Not Contain: ' ', '.', '#', '$', '[', or ']'</p>
+              </div>
+            </div>
+          </div>
+      </div>
+        </div>
+        <div class="card-content valign center">
+          <a class="waves-effect waves-light btn-large" id="btnSignup">Sign Up!</a>
+        </div>
+        <div class="card-content valign center" style = "font-size: 20px; color: whitesmoke;">
+          Already have an account? Sign in <a href='login.html'>here
+        </div>
+      </div>
+  </div>
+</body>
+<!-- logic script -->
+<script src="js/sign_up.js"></script>
 </html>

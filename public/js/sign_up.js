@@ -11,29 +11,33 @@ const database = firebase.database();
 const auth=firebase.auth();
 
 
-// check for valid username dynamically
-
 txtUsername.onkeyup = function checkUsername(){
-  var username=txtUsername.value.toLowerCase();
+  var username=txtUsername.value.toString().toLowerCase();
   if (username.indexOf('.') > -1||username.indexOf('#') > -1||username.indexOf('$') > -1||username.indexOf('[') > -1||username.indexOf(']') > -1) {
+    divUsernameCheck.style.display='inline-block';
     usernameCheckCircle.style.background='red';
     usernameInvalidString.style.display='inline-block';
     usernameExistsText.style.display='none';
     usernameValid=false;
-  } else if (username) {
+  } else if (username!=='') {
     usernameInvalidString.style.display='none';
     divUsernameCheck.style.display="inline-block";
-    database.ref('usernames').once('value', function(snapshot) {
-      if (snapshot.hasChild(username)) {
-        usernameCheckCircle.style.background='red';
-        usernameExistsText.style.display='inline-block';
-        usernameValid=false;
-      } else {
+    database.ref('usernames/'+username).once('value').then( function(snapshot) {
+      if (snapshot.val()==null) {
         usernameCheckCircle.style.background='green';
         usernameExistsText.style.display='none';
         usernameValid=true;
+      } else {
+        usernameCheckCircle.style.background='red';
+        usernameExistsText.style.display='inline-block';
+        usernameValid=false;
       }
     });
+  } else {
+    divUsernameCheck.style.display='none';
+    usernameCheckCircle.style.background='green';
+    usernameExistsText.style.display='none';
+    usernameInvalidString.style.display='none';
   }
 };
 
@@ -41,7 +45,7 @@ btnSignup.addEventListener('click', e=> {
   console.log('Clicked Button');
   if (usernameInvalidString) {
     console.log('Valid Username');
-    auth.createUserWithEmailAndPassword(txtUsername.value+"@send-app.com", txtPassword.value).catch(function(error) {
+    auth.createUserWithEmailAndPassword(txtUsername.value.toString().toLowerCase()+"@send-app.com", txtPassword.value).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       alert("Error "+errorCode+": "+errorMessage);
