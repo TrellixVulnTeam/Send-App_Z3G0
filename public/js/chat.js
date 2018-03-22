@@ -167,7 +167,11 @@ function mkThreadElement (currentDivObject, userList, mainNameOrMembersList, con
         newFont.color='teal';
         newFont.size='3';
         newFont.innerHTML=newInputElement.value;
-        database.ref('/users/'+window.userUid+'/threads/').update({[threadId]: newInputElement.value});
+        if (newInputElement.value!==''){
+          database.ref('/users/'+window.userUid+'/threads/').update({[threadId]: newInputElement.value});
+        } else {
+          database.ref('/users/'+window.userUid+'/threads/').update({[threadId]: true});
+        }
         newParentDiv.insertBefore(newFont, newParentDiv.firstChild);
         newParentDiv.removeChild(newInputElement);
         newInputElement=null;
