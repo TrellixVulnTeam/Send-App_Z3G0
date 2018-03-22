@@ -35,7 +35,7 @@ exports.valAndSetupNewUser = functions.auth.user().onCreate((event) => {
         admin.database().ref('/users/'+uid).set({
             'username': username,
             'threads': {
-              '-L51jzGWxwo0eDe0fLwc':true,
+              '-L7StE8350hTgTYg_o-m':true,
             },
             'picture': 'https://www.chcs.org/media/Profile_avatar_placeholder_large-1-200x200.png'
         });
@@ -83,7 +83,7 @@ exports.removeThreadIdFromUserProfile = functions.database.ref('/threads/{thread
 });
 
 //update message count whenever changed
-exports.countNumMessages = functions.database.ref('/threads/{threadPushId}/messages').onWrite((event) => {
+exports.countNumMessages = functions.database.ref('/threads/{threadPushId}/messages').onUpdate((event) => {
   return admin.database().ref('/threads/'+event.params.threadPushId+'/info').update({'messageCount': event.data.numChildren()});
 });
 

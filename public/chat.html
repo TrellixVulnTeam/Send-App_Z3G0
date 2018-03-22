@@ -114,6 +114,13 @@
 							</div>
 						</div>
 							<div class = "col m7 l8 whitesmoke">
+								<div class="card">
+									<div class="card-content">
+										<div class="center">
+											<font id='recipList' size="3" color="Teal"></font>
+										</div>
+									</div>
+								</div>
 								<div id='chatContainer' class = "card-panel red lighten-2" style = "height: 65vh; overflow: auto;">
 
 								</div>
@@ -148,5 +155,16 @@
 </script>
 <!-- logic script -->
 <script src="js/chat.js"></script>
+<!--
+<script type="text/javascript">
+	firebase.database().ref('threads/-L7StE8350hTgTYg_o-m/messages').remove();
+	var newDict={};
+	for (i=0;i<100;i++){
+		newDict[database.ref('threads/-L7StE8350hTgTYg_o-m/messages').push().key]={'content':i, 'sender':"sMP3blXTb0e19dZzElpdHGJAmU33"};
+	}
+	firebase.database().ref('threads/-L7StE8350hTgTYg_o-m/messages').set(newDict);
 
+	alert('finished');
+</script>
+-->
 </html>
