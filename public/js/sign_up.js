@@ -76,16 +76,17 @@ function checkForAccountSetup(uid){
     if (snapshot.val()===null){
       document.body.background='gray.png';
       document.body.innerHTML='<div class = "row"><div class = "col s12 m6 push-s0 push-m3"><div class = "card-panel red lighten-2" style = " overflow: overflow;"><div class="card-content valign center" style = "font-size: 28px; color: whitesmoke;">Please wait while we set up your account...</div><div class="progress"><div class="indeterminate"></div></div><div id="buttonDiv" class="card-content valign center" style = "font-size: 16px; color: whitesmoke;">We are refreshing every 3 seconds automatically,but if you are impatient=> </div></div></div></body>'
-      <a class="waves-effect waves-light btn">Manual Refresh</a>
-      var refreshButton=document.createElement('a');\
+      var refreshButton=document.createElement('a');
       refreshButton.setAttribute('class', 'waves-effect waves-light btn');
       refreshButton.innerHTML='Manual Refresh';
       refreshButton.addEventListener('click', e=> {
         checkForAccountSetup(uid);
       });
       document.getElementById('buttonDiv').appendChild(refreshButton);
-      await wait(3000);
-      checkForAccountSetup(uid);
+      setTimeout(function stopTimer(){
+        timer.stop();
+        checkForAccountSetup(uid);
+      },2000);
       //initializeApp();
     } else {
       window.location.href = 'chat.html';
